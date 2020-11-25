@@ -7,7 +7,7 @@ class Action:
 
 
     def feeding(self, quantity):
-        self.meal += (quantity / 10)
+        self.meal = self.meal + (quantity / 10)
         return self.meal
 
     def washing(self):
@@ -16,7 +16,7 @@ class Action:
 
 
     def sleeping(self):
-        self.fatigue += 50
+        self.fatigue = self.fatigue + 50
         return self.fatigue
 
     def endingLife(self):

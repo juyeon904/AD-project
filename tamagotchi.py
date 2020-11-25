@@ -99,49 +99,53 @@ class Tamagotchi(QWidget):
         self.setGeometry(300, 300, 1200, 800)
         self.setWindowTitle('Tamatgotchi')
 
-        self.dialogs = list() #추가
-
-        self.show()
+        #self.dialogs = list() #추가
 
         self.startGame()
 
+        self.show()
+
+
     def startGame(self):
         self.action = Action()
-        self.gameOver = False
+        #self.gameOver = False
 
     def button_clicked(self):
-        key = self.sender().text()
+        '''
+                if self.gameOver == True:
+                    dialog = Second(self)
+                    self.dialogs.append(dialog)
+                    dialog.show()
+        '''
 
-        if self.gameOver == True:
-            dialog = Second(self)
-            self.dialogs.append(dialog)
-            dialog.show()
+        button = self.sender()
+        key = button.text()
 
         if key == '입력':
             act_feed = self.action.feeding(self.feed_edit.text())
             self.hunger_text.setText(act_feed + '%')
-            if act_feed > 100 or act_feed <= 0:
-                self.gameOver = self.action.endingLife()
+            #if act_feed > 100 or act_feed <= 0:
+                #self.gameOver = self.action.endingLife()
 
         elif key == '씻기기':
             act_wash = self.action.washing()
             self.clean_text.setText(act_wash + '%')
-            if act_wash <= 0 :
-                self.gameOver = self.action.endingLife()
+            #if act_wash <= 0 :
+                #self.gameOver = self.action.endingLife()
 
         elif key == '재우기':
             act_sleep = self.action.sleeping()
             self.tired_text.setText(act_sleep + '%')
-            if act_sleep <= 0 :
-                self.gameOver = self.action.endingLife()
-
+            #if act_sleep <= 0 :
+                #self.gameOver = self.action.endingLife()
+'''
 class Second(QMainWindow):
     def __init__(self, parent = None):
         super(Second, self).__init__(parent)
 
         ending = QLabel("Game Over,,, 너 때문이야ㅜㅜ")
         ending.show()
-
+'''
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
