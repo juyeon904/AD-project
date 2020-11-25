@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
-#from Action import Action
+#from action import Action
 
 class Button(QToolButton):
     def __init__(self, text, callback):
@@ -20,14 +20,20 @@ class Button(QToolButton):
 class Tamagotchi(QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self.cnt = 0
+        self.hunger = 0
+        self.hunger_cnt = 0
+        self.clean = 0
+        self.clean_cnt = 0
+        self.tired = 0
+        self.tired_cnt = 0
+        self.study_cnt = 0
         self.age = 1
         self.stress = 0
-        self.all = 60
+        self.all = 100
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(300, 300, 860, 500)
+        self.setGeometry(300, 300, 1340, 500)
         self.setWindowTitle('Tamagotchi')
 
         self.cleanButton = QPushButton('씻기기')
@@ -81,7 +87,7 @@ class Tamagotchi(QWidget):
         self.all_text = QLineEdit()
         self.all_text.setReadOnly(True)
         self.hbox3.addWidget(self.all_text)
-        self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+        self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
         self.hbox4 = QHBoxLayout()
         self.hbox4.addWidget(QLabel('배 부 름 '))
@@ -95,7 +101,7 @@ class Tamagotchi(QWidget):
         self.clean_text.setReadOnly(True)
         self.hbox5.addWidget(self.clean_text)
         self.hbox6 = QHBoxLayout()
-        self.hbox6.addWidget(QLabel('피 로 도 '))
+        self.hbox6.addWidget(QLabel('피     로 '))
         self.tired_text = QLineEdit()
         self.tired_text.setReadOnly(True)
         self.hbox6.addWidget(self.tired_text)
@@ -122,61 +128,145 @@ class Tamagotchi(QWidget):
     def button_clicked(self):
         key = self.sender().text()
 
-        if key == '공부시키기':
-            self.cnt += 1 # 공부 횟수 카운팅
+        if key == '입력':
+            # 배부름 게이지바 업데이트
+            if (self.hunger + int(self.feed_edit.text()) >= 100):
+                self.hunger = 100
+                self.hunger_text.setText("■" * (self.hunger) + str(self.hunger) + "%")
+                self.status_text.setText("먹는중~")
+                self.feed_edit.clear()
+            else:
+                self.hunger += int(self.feed_edit.text())
+                self.hunger_text.setText("■" * (self.hunger) + str(self.hunger) + "%")
+                self.status_text.setText("먹는중~")
+                self.feed_edit.clear()
+
+            # 배부름 게이지를 종합 게이지에 반영
+            if (self.hunger >= 70):
+                if (self.all + 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all += 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+            elif (self.hunger < 30):
+                if (self.all - 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all -= 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+
+        elif key == '씻기기':
+            # 피로 게이지바 업데이트
+            self.clean = 100
+            self.clean_text.setText("■" * (self.clean) + str(self.clean) + "%")
+            self.status_text.setText("씻는중~")
+
+            # 청결 게이지를 종합 게이지에 반영
+            if (self.clean >= 70):
+                if (self.all + 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all += 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+            elif (self.clean < 30):
+                if (self.all - 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all -= 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+
+        elif key == '재우기':
+            # 피로 게이지바 업데이트
+            if (self.tired - 50 <= 0):
+                self.tired = 0
+                self.tired_text.setText("■" * (self.tired) + str(self.tired) + "%")
+                self.status_text.setText("자는중~")
+            else:
+                self.tired -= 50
+                self.tired_text.setText("■" * (self.tired) + str(self.tired) + "%")
+                self.status_text.setText("자는중~")
+
+            # 피로 게이지를 종합 게이지에 반영
+            if (self.tired >= 70):
+                if (self.all - 10 <= 0):
+                    self.all = 0
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all -= 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+            elif (self.tired < 30):
+                if (self.all + 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+                else:
+                    self.all += 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+
+        elif key == '공부시키기':
+            self.study_cnt += 1 # 공부 횟수 카운팅
+            #self.hunger_cnt += 1 # 움직임 횟수 카운팅 (허기)
+            #self.clean_cnt += 1  # 움직임 횟수 카운팅 (지저분)
+            #self.tired_cnt += 1  # 움직임 횟수 카운팅 (피곤)
+
             # 스트레스 게이지바 업데이트
-            if (self.stress + 18 >= 60):
-                self.stress = 60
-                self.stress_text.setText("■" * (self.stress) + str(int(self.stress * 1.66666667)) + "%")
+            if (self.stress + 30 >= 100):
+                self.stress = 100
+                self.stress_text.setText("■" * (self.stress) + str(self.stress) + "%")
                 self.status_text.setText("공부중~")
             else:
-                self.stress += 18
-                self.stress_text.setText("■" * (self.stress) + str(int(self.stress * 1.66666667)) + "%")
+                self.stress += 30
+                self.stress_text.setText("■" * (self.stress) + str(self.stress) + "%")
                 self.status_text.setText("공부중~")
             # 스트레스 게이지를 종합 게이지에 반영
-            if (self.stress >= 42):
-                if (self.all - 6 <= 0):
+            if (self.stress >= 70):
+                if (self.all - 10 <= 0):
                     self.all = 0
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
                 else:
-                    self.all -= 6
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
-            elif (self.stress < 18):
-                if (self.all + 6 >= 60):
-                    self.all = 60
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all -= 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+            elif (self.stress < 30):
+                if (self.all + 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
                 else:
-                    self.all += 6
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all += 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             # 공부 7번 하면 나이 + 1
-            if self.cnt % 7 == 0:
+            if self.study_cnt % 7 == 0:
                 self.age += 1
                 self.age_output.setText(str(self.age))
+
         elif key == '놀아주기':
-            if (self.stress - 9 <= 0):
+            # 스트레스 게이지바 업데이트
+            if (self.stress - 15 <= 0):
                 self.stress = 0
-                self.stress_text.setText("■" * (self.stress) + str(int(self.stress * 1.66666667)) + "%")
+                self.stress_text.setText("■" * (self.stress) + str(self.stress) + "%")
                 self.status_text.setText("노는중~")
             else:
-                self.stress -= 9
-                self.stress_text.setText("■" * (self.stress) + str(int(self.stress * 1.66666667)) + "%")
+                self.stress -= 15
+                self.stress_text.setText("■" * (self.stress) + str(self.stress) + "%")
                 self.status_text.setText("노는중~")
 
             # 스트레스 게이지를 종합 게이지에 반영
-            if (self.stress >= 42):
-                if (self.all - 6 <= 0):
+            if (self.stress >= 70):
+                if (self.all - 10 <= 0):
                     self.all = 0
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
                 else:
-                    self.all -= 6
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
-            elif (self.stress < 18):
-                if (self.all + 6 >= 60):
-                    self.all = 60
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all -= 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+            elif (self.stress < 30):
+                if (self.all + 10 >= 100):
+                    self.all = 100
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
                 else:
-                    self.all += 6
-                    self.all_text.setText("■" * (self.all) + str(int(self.all * 1.66666667)) + "%")
+                    self.all += 10
+                    self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
 
 if __name__ == '__main__':
