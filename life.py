@@ -1,4 +1,0 @@
-class Life:
-
-    def endingLife:
-
