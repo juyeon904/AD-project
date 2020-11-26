@@ -40,23 +40,23 @@ class Game(QWidget):
         self.vbox = QVBoxLayout()
 
         self.hbox0 = QHBoxLayout()
-        self.hbox0.addWidget(QLabel(' 지금은 '))
+        self.hbox0.addStretch(1)
+        self.age_output = QLineEdit(self)
+        self.age_output.setReadOnly(True)
+        self.age_output.setFixedWidth(20)
+        self.age_output.setText(str(self.age))
+        self.age_label2 = QLabel(' 살', self)
+        self.hbox0.addWidget(self.age_output)
+        self.hbox0.addWidget(self.age_label2)
+
+        self.hbox0.addWidget(QLabel(' 다마고치는 '))
         self.status_text = QLineEdit()
         self.status_text.setReadOnly(True)
+        self.status_text.setFixedWidth(80)
         self.hbox0.addWidget(self.status_text)
         self.hbox0.addStretch(1)
 
-        self.age_label = QLabel('나이 : ', self)
-        self.age_output = QLineEdit(self)
-        self.age_output.setReadOnly(True)
-        self.age_output.resize(30, 30)
-        self.age_output.setText(str(self.age))
-        self.hbox0.addWidget(self.age_label)
-        self.hbox0.addWidget(self.age_output)
-        self.hbox0.addStretch(1)
-
         self.hbox1 = QHBoxLayout()
-        self.hbox1.addWidget(QLabel('다마고치'))
         self.hbox1.addStretch(1)
         self.character_text = QLabel()
         self.hbox1.addWidget(self.character_text)
@@ -64,18 +64,18 @@ class Game(QWidget):
         self.character_text.setPixmap(QPixmap(self.face))
 
         self.hbox2 = QHBoxLayout()
-        self.hbox2.addWidget(QLabel('밥 주 기 '))
-        self.feed_edit = QLineEdit()
-        self.hbox2.addWidget(self.feed_edit)
-        feedButton = Button(' 입력 ', self.button_clicked)
-        self.hbox2.addWidget(feedButton)
-        self.hbox2.addWidget(feedButton)
         self.hbox2.addStretch(1)
+        self.hbox2.addWidget(QLabel(' 밥을 '))
+        self.feed_edit = QLineEdit()
+        self.feed_edit.setFixedWidth(100)
+        self.hbox2.addWidget(self.feed_edit)
 
-        buttonGroups = ['  씻기기  ', '  재우기  ', '공부시키기', ' 놀아주기 ']
+        buttonGroups = ['g 주기','씻기기', '재우기', '공부시키기', '놀아주기']
         for btnText in buttonGroups :
             button = Button(btnText, self.button_clicked)
+            button.setFixedWidth(100)
             self.hbox2.addWidget(button)
+        self.hbox2.addStretch(1)
 
         self.hbox3 = QHBoxLayout()
         self.hbox4 = QHBoxLayout()
@@ -113,7 +113,7 @@ class Game(QWidget):
     def button_clicked(self):
         key = self.sender().text()
 
-        if key == ' 입력 ':
+        if key == 'g 주기':
             # 배부름 게이지바 업데이트
             try:
                 food = int(self.feed_edit.text())
@@ -126,14 +126,14 @@ class Game(QWidget):
                 self.feed_edit.setText("Error!")
 
 
-        elif key == '  씻기기  ':
+        elif key == '씻기기':
             # 청결 게이지바 업데이트
             self.clean_text.setText(self.action.washing(100))
             self.hunger_text.setText(self.action.feeding(-10))
             self.tired_text.setText(self.action.sleeping(-10))
             self.status_text.setText("씻는 중~")
 
-        elif key == '  재우기  ':
+        elif key == '재우기':
             # 피로 게이지바 업데이트
             self.tired_text.setText(self.action.sleeping(50))
             self.hunger_text.setText(self.action.feeding(-10))
@@ -150,7 +150,7 @@ class Game(QWidget):
             self.age = self.tamagotchi.ageCount(self.action.study_cnt)
             self.age_output.setText(str(self.age))
 
-        elif key == ' 놀아주기 ':
+        elif key == '놀아주기':
             # 스트레스 게이지바 업데이트
             self.stress_text.setText(self.action.playing())
             self.hunger_text.setText(self.action.feeding(-10))
