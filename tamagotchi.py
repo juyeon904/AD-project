@@ -19,4 +19,5 @@ class Tamagotchi:
     def ageCount(self, study_cnt):
         if study_cnt % 5 == 0:
             self.age += 1
+
         return self.age

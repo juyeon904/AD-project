@@ -8,7 +8,6 @@ class Action:
         self.age = 1
         self.stress = 50
         self.all = 50
-        #self.face = "face_smile.png"
 
         self.currentHunger = "■" * (self.hunger) + str(self.hunger) + "%"
         self.currentClean = "■" * (self.clean) + str(self.clean) + "%"
