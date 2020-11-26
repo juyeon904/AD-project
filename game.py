@@ -40,7 +40,7 @@ class Game(QWidget):
         self.vbox = QVBoxLayout()
 
         self.hbox0 = QHBoxLayout()
-        self.hbox0.addWidget(QLabel('~지금은~'))
+        self.hbox0.addWidget(QLabel(' 지금은 '))
         self.status_text = QLineEdit()
         self.status_text.setReadOnly(True)
         self.hbox0.addWidget(self.status_text)
@@ -115,25 +115,30 @@ class Game(QWidget):
 
         if key == ' 입력 ':
             # 배부름 게이지바 업데이트
-            self.hunger_text.setText(self.action.feeding(self.feed_edit.text()))
-            self.feed_edit.clear()
-            self.clean_text.setText(self.action.washing(-10))
-            self.tired_text.setText(self.action.sleeping(-10))
-            self.status_text.setText("먹는중~")
+            try:
+                food = int(self.feed_edit.text())
+                self.hunger_text.setText(self.action.feeding(food))
+                self.feed_edit.clear()
+                self.clean_text.setText(self.action.washing(-10))
+                self.tired_text.setText(self.action.sleeping(-10))
+                self.status_text.setText("먹는 중~")
+            except:
+                self.feed_edit.setText("Error!")
+
 
         elif key == '  씻기기  ':
             # 청결 게이지바 업데이트
             self.clean_text.setText(self.action.washing(100))
             self.hunger_text.setText(self.action.feeding(-10))
             self.tired_text.setText(self.action.sleeping(-10))
-            self.status_text.setText("씻는중~")
+            self.status_text.setText("씻는 중~")
 
         elif key == '  재우기  ':
             # 피로 게이지바 업데이트
             self.tired_text.setText(self.action.sleeping(50))
             self.hunger_text.setText(self.action.feeding(-10))
             self.clean_text.setText(self.action.washing(-10))
-            self.status_text.setText("자는중~")
+            self.status_text.setText("자는 중~")
 
         elif key == '공부시키기':
             # 스트레스 게이지바 업데이트
@@ -141,7 +146,7 @@ class Game(QWidget):
             self.hunger_text.setText(self.action.feeding(-10))
             self.clean_text.setText(self.action.washing(-10))
             self.tired_text.setText(self.action.sleeping(-10))
-            self.status_text.setText("공부중~")
+            self.status_text.setText("공부 중~")
             self.age = self.tamagotchi.ageCount(self.action.study_cnt)
             self.age_output.setText(str(self.age))
 
@@ -151,7 +156,7 @@ class Game(QWidget):
             self.hunger_text.setText(self.action.feeding(-10))
             self.clean_text.setText(self.action.washing(-10))
             self.tired_text.setText(self.action.sleeping(-10))
-            self.status_text.setText("노는중~")
+            self.status_text.setText("노는 중~")
 
         self.action.all_gauge()
         self.all_text.setText(self.action.currentAll)

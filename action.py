@@ -17,8 +17,8 @@ class Action:
         self.currentAll = "■" * (self.all) + str(self.all) + "%"
 
     def feeding(self, food):
-        if (self.hunger + int(food) <= 100 and self.hunger + int(food) >= 0):
-            self.hunger += int(food)
+        if (self.hunger + food <= 100 and self.hunger + food >= 0):
+            self.hunger += food
         else:
             self.endingLife()
         self.currentHunger = "■" * (self.hunger) + str(self.hunger) + "%"
