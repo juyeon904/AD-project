@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
-from action import Action
+#from action import Action
 
 class Button(QToolButton):
     def __init__(self, text, callback):
@@ -164,6 +164,8 @@ class Tamagotchi(QWidget):
             self.washing(-10)
             self.sleeping(-10)
 
+        self.all_text.setText("■" * (self.all) + str(self.all) + "%")
+
 
     def feeding(self, food):
         if (self.hunger + int(food) <= 100 and self.hunger + int(food) >= 0):
@@ -180,18 +182,13 @@ class Tamagotchi(QWidget):
         if (self.hunger >= 70):
             if (self.all + 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all += 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
         elif (self.hunger < 30):
             if (self.all - 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all -= 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
-
 
     def washing(self, wash):
         if (self.clean + int(wash) < 0):
@@ -209,17 +206,13 @@ class Tamagotchi(QWidget):
         if (self.clean >= 70):
             if (self.all + 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all += 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
         elif (self.clean < 30):
             if (self.all - 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all -= 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
     def sleeping(self, sleep):
         if (self.tired - int(sleep) > 100):
@@ -238,17 +231,13 @@ class Tamagotchi(QWidget):
         if (self.tired >= 70):
             if (self.all - 10 <= 0):
                 self.all = 0
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all -= 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
         elif (self.tired < 30):
             if (self.all + 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all += 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
     def studying(self):
         self.study_cnt += 1  # 공부 횟수 카운팅
@@ -266,17 +255,13 @@ class Tamagotchi(QWidget):
         if (self.stress >= 70):
             if (self.all - 10 <= 0):
                 self.all = 0
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all -= 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
         elif (self.stress < 30):
             if (self.all + 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all += 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
         # 공부 7번 하면 나이 + 1
         if self.study_cnt % 7 == 0:
@@ -297,17 +282,13 @@ class Tamagotchi(QWidget):
         if (self.stress >= 70):
             if (self.all - 10 <= 0):
                 self.all = 0
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all -= 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
         elif (self.stress < 30):
             if (self.all + 10 >= 100):
                 self.all = 100
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
             else:
                 self.all += 10
-                self.all_text.setText("■" * (self.all) + str(self.all) + "%")
 
     def endingLife(self):
         self.character_text.setText("Game Over,,, 너 때문이야,,,༼ つ ◕_◕ ༽つ༼ つ ◕_◕ ༽つ")
