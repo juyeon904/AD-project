@@ -17,7 +17,7 @@ class Button(QToolButton):
 
     def sizeHint(self):  # 버튼의 사이즈 리턴하는 함수 정의하기
         size = super(Button, self).sizeHint()
-        size.setHeight(size.height() + 20)  # 버튼의 세로 크기 = height에 20픽셀 더한 값
+        size.setHeight(size.height() + 10)  # 버튼의 세로 크기 = height에 10픽셀 더한 값
         size.setWidth(max(size.width(), size.height()))  # 버튼의 가로 크기 = width와 height 중 더 큰 값
         return size  # 사이즈 리턴하기
 
@@ -38,63 +38,76 @@ class Game(QWidget):
         self.initUI()
 
     def initUI(
-            self):  # 화면에 출력될 창들 만들고 위치 지정하기 - 나이, 이름, 행동(~하는 중), 표정, 버튼(밥 주기, 씻기기, 재우기, 공부시키기, 놀아주기), 수치(종합, 배부름, 청결, 피로, 스트레스)
-        self.setGeometry(300, 200, 1340, 700)  # 창의 위치와 크기 조절 - (300, 200) 위치에 출력, 가로 1340, 세로 700
+            self):  # 화면에 출력될 창들 만들고 위치 지정하기 - 나이, 이름, 행동(~하는 중), 표정, 버튼(먹이기, 씻기기, 재우기, 공부시키기, 놀아주기), 수치(종합, 배부름, 청결, 피로, 스트레스)
+        self.setGeometry(500, 150, 800, 800)  # 창의 위치와 크기 조절 - (500, 150) 위치에 출력, 가로 800, 세로 800
         self.setWindowTitle('Tamagotchi')  # 창의 제목 설정 = 'Tamagotchi'
 
         self.vbox = QVBoxLayout()  # 수직 상자 정렬 레이아웃 만들기
 
         self.hbox0 = QHBoxLayout()  # 0번 수평 상자 정렬 레이아웃 만들기
         self.hbox0.addStretch(1)  # 공간 확보 위해 0번 수평 상자에 스트레치 요소 추가 - 위젯 앞에 공간 확보
+        self.tama_label = QLabel('TAMAGOTCHI', self) # 타이틀 만들기
+        font = self.tama_label.font()
+        font.setPointSize(font.pointSize() + 15) # 폰트크기 크게
+        font.setBold(True) # 폰트 굵게
+        font.setFamily('Pixel') # 글씨체 변경
+        self.tama_label.setFont(font) # 타이틀 폰트 설정
+        #self.tama_label.setStyleSheet('color:white;') # 폰트색상
+        self.hbox0.addWidget(self.tama_label) # 0번 수평 상자에 타이틀 표시하는 창 배치하기
+        self.hbox0.addStretch(1) # 공간 확보 위해 0번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보
+
+        self.hbox1 = QHBoxLayout()  # 1번 수평 상자 정렬 레이아웃 만들기
+        self.hbox1.addStretch(1)  # 공간 확보 위해 1번 수평 상자에 스트레치 요소 추가 - 위젯 앞에 공간 확보
         self.age_output = QLineEdit(self)  # 나이(QLineEdit 객체)를 표시할 칸 만들기
         self.age_output.setReadOnly(True)  # 나이 창에 입력이 불가능하도록 만들기 - 프로그램 수행 결과만 출력되게끔 만들기
         self.age_output.setFixedWidth(20)  # 나이 창의 크기 20픽셀로 고정하기
         self.age_output.setText(str(self.age))  # 나이 창에 age 값 출력하기
-        self.age_label2 = QLabel(' 살', self)  # 나이 단위 위젯 만들기
-        self.hbox0.addWidget(self.age_output)  # 0번 수평 상자에 나이 표시하는 창 배치하기
-        self.hbox0.addWidget(self.age_label2)  # 0번 수평 상자에(나이 표시하는 창 옆에) 나이 단위(' 살') 배치하기
+        self.age_output.setAlignment(Qt.AlignHCenter) # 텍스트 가운데 정렬
+        self.age_label2 = QLabel('살 ', self)  # 나이 단위 위젯 만들기
+        self.hbox1.addWidget(self.age_output)  # 1번 수평 상자에 나이 표시하는 창 배치하기
+        self.hbox1.addWidget(self.age_label2)  # 1번 수평 상자에(나이 표시하는 창 옆에) 나이 단위(' 살') 배치하기
 
         self.name_text = QLineEdit(self)  # 이름(QLineEdit 객체)를 표시할 칸 만들기
         self.name_text.setReadOnly(True)  # 이름 창에 입력이 불가능하도록 만들기 - 프로그램 처음에 실행할 때 입력한 이름만 출력되게끔 만들기
-        self.name_text.setFixedWidth(55)  # 이름 창의 크기 55픽셀로 고정하기
-        self.hbox0.addWidget(self.name_text)  # 0번 수평 상자에(나이 단위 옆에) 이름 표시하는 창 배치하기
-        self.hbox0.addWidget(QLabel(' 은/는 '))  # 0번 수평 상자에(이름 표시하는 창 옆에) 조사(' 은/는 ') 배치하기
+        self.name_text.setFixedWidth(80)  # 이름 창의 크기 80픽셀로 고정하기
+        self.name_text.setAlignment(Qt.AlignHCenter) # 텍스트 가운데 정렬
+        self.hbox1.addWidget(self.name_text)  # 1번 수평 상자에(나이 단위 옆에) 이름 표시하는 창 배치하기
+        self.hbox1.addWidget(QLabel('은/는 '))  # 1번 수평 상자에(이름 표시하는 창 옆에) 조사(' 은/는 ') 배치하기
 
         self.status_text = QLineEdit()  # 상태(QLineEdit 객체)를 표시할 칸 만들기
         self.status_text.setReadOnly(True)  # 상태 창에 입력이 불가능하도록 만들기 - 프로그램 수행 결과만 출력되게끔 만들기
         self.status_text.setFixedWidth(80)  # 이름 창의 크기 80픽셀로 고정하기
-        #font1 = self.status_text.font()
-        #font1.setPointSize(10)
-        #self.status_text.setFont(font1)
-        self.hbox0.addWidget(self.status_text)  # 0번 수평 상자에(조사 옆에) 상태 표시하는 창 배치하기
-        self.hbox0.addStretch(1)  # 공간 확보 위해 0번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보, 위젯 가운데 정렬
-
-        self.hbox1 = QHBoxLayout()  # 1번 수평 상자 정렬 레이아웃 만들기
-        self.hbox1.addStretch(1)  # 공간 확보 위해 1번 수평 상자에 스트레치 요소 추가 - 위젯 앞에 공간 확보
-        self.character_text = QLabel()  # 다마고치의 표정이 들어갈 공간 확보하기
-        self.hbox1.addWidget(self.character_text)  # 1번 수평 상자에 다마고치의 표정 표시하는 창 배치하기
+        self.status_text.setAlignment(Qt.AlignHCenter) # 텍스트 가운데 정렬
+        self.hbox1.addWidget(self.status_text)  # 1번 수평 상자에(조사 옆에) 상태 표시하는 창 배치하기
         self.hbox1.addStretch(1)  # 공간 확보 위해 1번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보, 위젯 가운데 정렬
-        self.character_text.setPixmap(QPixmap(self.face))  # 창에 다마고치의 표정 이미지 나타내기
 
         self.hbox2 = QHBoxLayout()  # 2번 수평 상자 정렬 레이아웃 만들기
         self.hbox2.addStretch(1)  # 공간 확보 위해 2번 수평 상자에 스트레치 요소 추가 - 위젯 앞에 공간 확보
-        self.hbox2.addWidget(QLabel(' 밥을 '))  # 2번 수평 상자에 텍스트(' 밥을 ') 배치하기
-        self.feed_edit = QLineEdit()  # 밥을 얼마나 줄 것인지 텍스트 입력 가능하게 만들기
-        self.feed_edit.setFixedWidth(100)  # 밥의 양 나타내는 창의 크기 100픽셀로 고정하기
-        self.hbox2.addWidget(self.feed_edit)  # 2번 수평 상자에(텍스트 옆에) 밥의 양 나타내는 창 배치하기
-
-        buttonGroups = ['g 주기', '씻기기', '재우기', '공부시키기', '놀아주기']  # 버튼을 그룹으로 묶기 - 뒤에 나오는 버튼 생성 코드의 반복 개선 위해 사용할 것
-        for btnText in buttonGroups:  # 버튼 생성 코드의 반복 개선 - 반복문 사용해 동일(유사)한 코드를 연속해서 쓰는 것 개선
-            button = Button(btnText, self.button_clicked)
-            button.setFixedWidth(100)  # 버튼의 크기 고정 - 100픽셀
-            self.hbox2.addWidget(button)  # 2번 수평 상자에 새로 생성한 버튼 위젯 추가
-        self.hbox2.addStretch(1)  # 공간 확보 위해 2번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보, 버튼 위젯 가운데 정렬
+        self.character_text = QLabel()  # 다마고치의 표정이 들어갈 공간 확보하기
+        self.hbox2.addWidget(self.character_text)  # 2번 수평 상자에 다마고치의 표정 표시하는 창 배치하기
+        self.hbox2.addStretch(1)  # 공간 확보 위해 2번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보, 위젯 가운데 정렬
+        self.character_text.setPixmap(QPixmap(self.face))  # 창에 다마고치의 표정 이미지 나타내기
 
         self.hbox3 = QHBoxLayout()  # 3번 수평 상자 정렬 레이아웃 만들기
+        self.hbox3.addStretch(1)  # 공간 확보 위해 3번 수평 상자에 스트레치 요소 추가 - 위젯 앞에 공간 확보
+        self.hbox3.addWidget(QLabel('밥의 양 : '))  # 3번 수평 상자에 텍스트('밥의 양 : ') 배치하기
+        self.feed_edit = QLineEdit('0')  # 밥을 얼마나 줄 것인지 텍스트 입력 가능하게 만들기, 디폴트 값 0
+        self.feed_edit.setFixedWidth(90)  # 밥의 양 나타내는 창의 크기 90픽셀로 고정하기
+        self.feed_edit.setAlignment(Qt.AlignRight) # 텍스트 우측정렬
+        self.hbox3.addWidget(self.feed_edit)  # 3번 수평 상자에(텍스트 옆에) 밥의 양 나타내는 창 배치하기
+
+        buttonGroups = ['먹이기', '씻기기', '재우기', '공부시키기', '놀아주기']  # 버튼을 그룹으로 묶기 - 뒤에 나오는 버튼 생성 코드의 반복 개선 위해 사용할 것
+        for btnText in buttonGroups:  # 버튼 생성 코드의 반복 개선 - 반복문 사용해 동일(유사)한 코드를 연속해서 쓰는 것 개선
+            button = Button(btnText, self.button_clicked)
+            button.setFixedWidth(120)  # 버튼의 크기 고정 - 120픽셀
+            self.hbox3.addWidget(button)  # 2번 수평 상자에 새로 생성한 버튼 위젯 추가
+        self.hbox3.addStretch(1)  # 공간 확보 위해 3번 수평 상자에 스트레치 요소 추가 - 위젯 뒤에 공간 확보, 버튼 위젯 가운데 정렬
+
         self.hbox4 = QHBoxLayout()  # 4번 수평 상자 정렬 레이아웃 만들기
         self.hbox5 = QHBoxLayout()  # 5번 수평 상자 정렬 레이아웃 만들기
         self.hbox6 = QHBoxLayout()  # 6번 수평 상자 정렬 레이아웃 만들기
         self.hbox7 = QHBoxLayout()  # 7번 수평 상자 정렬 레이아웃 만들기
+        self.hbox8 = QHBoxLayout()  # 8번 수평 상자 정렬 레이아웃 만들기
 
         self.all_text = QLineEdit()  # 종합 수치(QLineEdit 객체)를 표시할 칸 만들기
         self.hunger_text = QLineEdit()  # 배고픔 수치(QLineEdit 객체)를 표시할 칸 만들기
@@ -105,19 +118,24 @@ class Game(QWidget):
         self.action = Action()  # action 객체 호출하기
         self.tamagotchi = Tamagotchi()  # tamagotchi 객체 호출하기
 
+        # 수평 상자, 텍스트, 상태 수치를 각각 그룹으로 묶기 - 뒤에 나오는 버튼 생성 코드의 반복 개선 위해 사용할 것
         layoutGroups = [self.hbox0, self.hbox1, self.hbox2, self.hbox3, self.hbox4, self.hbox5, self.hbox6,
-                        self.hbox7]  # 수평 상자들을 그룹으로 묶기 - 뒤에 나오는 상태 표시 코드의 반복 개선 위해 사용할 것
-        gaugeGroups = ['종     합 ', '배 부 름 ', '청     결 ', '피     로 ', '스트레스']
+                        self.hbox7, self.hbox8]
+        gaugeGroups = ['종     합', '배 부 름', '청     결', '피     로', '스트레스']
         textGroups = [self.all_text, self.hunger_text, self.clean_text, self.tired_text, self.stress_text]
         valueGroups = [self.action.currentAll, self.action.currentHunger, self.action.currentClean,
                        self.action.currentTired, self.action.currentStress]
-        # 수평 상자, 텍스트, 상태 수치를 각각 그룹으로 묶기 - 뒤에 나오는 버튼 생성 코드의 반복 개선 위해 사용할 것
 
-        for i in range(len(gaugeGroups)):  # 반복문 사용해 동일(유사) 코드의 반복 방지 - 다마고치의 상태(종합, 배부름, 청결, 피로, 스트레스) 나타내는 창 배치하기
-            layoutGroups[i + 3].addWidget(QLabel(gaugeGroups[i]))
+        for i in range(len(gaugeGroups)):
+            # 반복문 사용해 동일(유사) 코드의 반복 방지 - 다마고치의 상태(종합, 배부름, 청결, 피로, 스트레스) 나타내는 창 배치하기, 폰트 사이즈변경
+            layoutGroups[i + 4].addWidget(QLabel(gaugeGroups[i]))
             textGroups[i].setReadOnly(True)
-            layoutGroups[i + 3].addWidget(textGroups[i])
+            layoutGroups[i + 4].addWidget(textGroups[i])
             textGroups[i].setText(valueGroups[i])
+            font = textGroups[i].font()
+            font.setPointSize(font.pointSize() - 1)
+            textGroups[i].setFont(font)
+            textGroups[i].setFixedWidth(730)
 
         for hbox in layoutGroups:  # 수평 상자 레이아웃을 수직 상자 레이아웃 안으로 배치 - 반복문 사용해 동일(유사) 코드의 반복 방지
             self.vbox.addLayout(hbox)
@@ -125,13 +143,15 @@ class Game(QWidget):
 
         if self.startGame == True:  # 게임이 시작되었을 경우에 수행될 작업 설정하기
             self.nameInput()  # 다마고치의 이름 정하는 함수 호출하기
+        if self.startGame == False: # 다마고치의 이름을 정하지 않았다면 다시 초기화면으로
+            self.nameInput()
 
         self.show()
 
     def button_clicked(self):  # 버튼이 눌렸을 때 의도한 명령 수행하게 하는 함수 정의하기
         key = self.sender().text()  # sender 메소드 호출해 신호 소스 결정 - 현재 눌려진 버튼을 key에 저장
 
-        if key == 'g 주기':  # 밥 주기('g 주기') 버튼이 눌린 경우
+        if key == '먹이기':  # 밥 주기('먹이기') 버튼이 눌린 경우
             # 배부름 게이지바 업데이트
             try:
                 food = int(self.feed_edit.text())  # 입력한 밥의 양을 int로 바꾸기
@@ -189,7 +209,7 @@ class Game(QWidget):
         if self.end == True:
             self.endingLife()
         # 5살 되면 게임 클리어
-        if self.age == 2:
+        if self.age == 5:
             self.clearGame()
 
     # 게임 오버 메세지 창
@@ -201,6 +221,9 @@ class Game(QWidget):
         QMessageBox.about(self, 'GAME CLEAR!', "키워주셔서 감사합니다 ٩(*´∀`*)۶" + '\n' + "이제 저는 저 넓은 세상 밖으로 나갈 거에요! 신난다!")
 
     def nameInput(self):  # 게임이 시작되었을 때 다마고치의 이름 정하는 함수 정의하기
+        # 주의사항 메세지 창 생성
+        QMessageBox.about(self, '♡ C A U T I O N ♡',
+                          '1. 이름은 네 글자 이하로 입력해 주세요!' + '\n' + '2. 밥은 입력한 만큼 퍼센티지로 반영됩니다!' + '\n' + '      ( ex. 30 g -> 30 % )')
         name, ok = QInputDialog.getText(self, 'INPUT NAME', '♡✧。°₊·다마고치의 이름은‧₊°。✧♡')
 
         if ok == True:  # ok 버튼이 눌린 경우에 수행할 작업 정의하기
@@ -208,7 +231,8 @@ class Game(QWidget):
                 self.name_text.setText('다마고치')  # 이름을 기본값인 '다마고치'로 설정
             else:
                 self.name_text.setText(str(name))  # 입력한 텍스트를 다마고치의 이름으로 정하고 name에 넣기
-            self.startGame = False
+        else:
+            self.startGame = False # 게임을 스타트하지 못하도록 함
 
 
 if __name__ == '__main__':
@@ -216,7 +240,7 @@ if __name__ == '__main__':
 
     fontDB = QFontDatabase()
     fontDB.addApplicationFont('./1훈떡볶이 R.ttf')
-    app.setFont(QFont('1훈떡볶이 R'))
+    app.setFont(QFont('1훈떡볶이 R')) #폰트 변경
 
     ex = Game()
     sys.exit(app.exec_())  # app 통해 exec_() 메서드 호출 - 이벤트 루프에 진입, 무한 반복하며 이벤트 처리(해당 윈도우가 계속 화면 상에 나타나 있을 수 있게 함)
